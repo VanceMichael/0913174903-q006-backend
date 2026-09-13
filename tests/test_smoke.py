@@ -1,3 +1,15 @@
-def test_project_imports():
-    from app.main import create_app
-    assert create_app() is None
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
+
+import django
+
+django.setup()
+
+from django.test import Client
+
+
+def test_health_endpoint():
+    response = Client().get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
